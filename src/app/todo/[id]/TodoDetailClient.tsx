@@ -32,13 +32,18 @@ export default function TodoDetailClient({ id }: TodoDetailClientProps) {
     const fetchTodo = async () => {
       try {
         setLoading(true);
+        setError(null);
         const data = await todoApi.fetchTodoById(id);
         setTodo(data);
         setEditTitle(data.title);
       } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "データの取得に失敗しました"
-        );
+        const errorMsg = err instanceof Error ? err.message : "データの取得に失敗しました";
+        // Check if it's a "not found" error
+        if (errorMsg.includes("見つかりません")) {
+          setError("notfound");
+        } else {
+          setError(errorMsg);
+        }
       } finally {
         setLoading(false);
       }
@@ -85,14 +90,31 @@ export default function TodoDetailClient({ id }: TodoDetailClientProps) {
     );
   }
 
-  if (error) {
+  if (error === "notfound") {
     return (
-      <Box p={4}>
-        <Alert severity="error">{error}</Alert>
+      <Box p={4} maxWidth="600px" mx="auto">
+        <Alert severity="warning" sx={{ mb: 2 }}>
+          このタスクは見つかりません。
+          <br />
+          タスクが削除されたか、IDが正しくない可能性があります。
+        </Alert>
         <Button
           variant="contained"
           onClick={() => router.push("/")}
-          sx={{ mt: 2 }}
+        >
+          リストに戻る
+        </Button>
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box p={4} maxWidth="600px" mx="auto">
+        <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>
+        <Button
+          variant="contained"
+          onClick={() => router.push("/")}
         >
           リストに戻る
         </Button>
@@ -102,12 +124,11 @@ export default function TodoDetailClient({ id }: TodoDetailClientProps) {
 
   if (!todo) {
     return (
-      <Box p={4}>
-        <Alert severity="warning">タスクが見つかりません</Alert>
+      <Box p={4} maxWidth="600px" mx="auto">
+        <Alert severity="warning" sx={{ mb: 2 }}>タスクが見つかりません</Alert>
         <Button
           variant="contained"
           onClick={() => router.push("/")}
-          sx={{ mt: 2 }}
         >
           リストに戻る
         </Button>
