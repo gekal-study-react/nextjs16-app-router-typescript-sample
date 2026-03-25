@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import {
   Typography,
   TextField,
@@ -15,6 +16,7 @@ import {
   Box,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import { useTodos, useAddTodo, useToggleTodo, useDeleteTodo } from "@/hooks/useTodos";
 import { useIsMounted } from "@/hooks/useIsMounted";
 
@@ -80,7 +82,7 @@ export const TodoListClient: React.FC = () => {
       ) : (
         <List>
           {todos.map((todo) => (
-            <ListItem
+             <ListItem
               key={todo.id}
               disablePadding
               sx={{
@@ -90,15 +92,27 @@ export const TodoListClient: React.FC = () => {
                 boxShadow: 1,
               }}
               secondaryAction={
-                <IconButton
-                  edge="end"
-                  aria-label="delete"
-                  onClick={() => deleteTodo.mutate(todo.id)}
-                  disabled={deleteTodo.isPending}
-                  sx={{ ml: 1 }}
-                >
-                  <DeleteIcon />
-                </IconButton>
+                <Box display="flex" gap={0.5}>
+                  <Link href={`/todo/${todo.id}`} passHref legacyBehavior>
+                    <IconButton
+                      edge="end"
+                      aria-label="edit"
+                      component="a"
+                      sx={{ ml: 1 }}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  </Link>
+                  <IconButton
+                    edge="end"
+                    aria-label="delete"
+                    onClick={() => deleteTodo.mutate(todo.id)}
+                    disabled={deleteTodo.isPending}
+                    sx={{ ml: 1 }}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </Box>
               }
             >
               <ListItemIcon sx={{ pl: 2 }}>

@@ -68,4 +68,14 @@ export const todoApi = {
     const filteredTodos = todos.filter((t) => t.id !== id);
     saveTodosToStorage(filteredTodos);
   },
+
+  updateTodo: async (id: string, updates: Partial<Todo>): Promise<Todo> => {
+    await delay(300);
+    const todos = getTodosFromStorage();
+    const updated = todos.map((t) => (t.id === id ? { ...t, ...updates } : t));
+    saveTodosToStorage(updated);
+    const updatedTodo = updated.find((t) => t.id === id);
+    if (!updatedTodo) throw new Error("Todo not found");
+    return updatedTodo;
+  },
 };
