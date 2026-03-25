@@ -28,7 +28,7 @@ export const AppProvider: React.FC<LayoutProps> = ({ children }) => {
   const isLoading = isMutating > 0 || isSuspenseLoading;
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1 }} suppressHydrationWarning>
       <AppBar position="static">
         <Toolbar>
           <Typography

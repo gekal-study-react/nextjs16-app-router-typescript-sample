@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "@/styles/globals.css";
+import { CssBaseline } from "@mui/material";
 import { ClientLayout } from "./ClientLayout";
 
 export const metadata: Metadata = {
@@ -15,7 +16,8 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <head />
-      <body className="antialiased">
+      <body className="antialiased" suppressHydrationWarning>
+        <CssBaseline />
         <ClientLayout>
           {children}
         </ClientLayout>

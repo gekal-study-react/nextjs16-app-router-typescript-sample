@@ -2,7 +2,6 @@
 
 import React from "react";
 import { createTheme, ThemeProvider } from "@mui/material";
-import CssBaseline from "@mui/material/CssBaseline";
 import { AppProvider } from "@/components/AppProvider";
 import { QueryProvider } from "@/components/QueryProvider";
 import { GlobalLoadingProvider } from "@/contexts/GlobalLoadingContext";
@@ -18,7 +17,6 @@ export function ClientLayout({ children }: ClientLayoutProps) {
     <QueryProvider>
       <GlobalLoadingProvider>
         <ThemeProvider theme={theme}>
-          <CssBaseline />
           <AppProvider>
             {children}
           </AppProvider>
