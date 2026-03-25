@@ -1,13 +1,12 @@
 "use client";
 
-import React, { Suspense } from "react";
+import React from "react";
 import { AppBar, Box, Container, Toolbar, Typography } from "@mui/material";
 import { ErrorBoundary } from "react-error-boundary";
 import { ErrorFallback } from "./ErrorFallback";
 import { useIsMutating, useQueryErrorResetBoundary } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { Loading } from "@/components/Loading";
-import { SuspenseIndicator } from "./SuspenseIndicator";
 import { useGlobalLoading } from "@/contexts/GlobalLoadingContext";
 
 interface LayoutProps {
@@ -47,7 +46,7 @@ export const AppProvider: React.FC<LayoutProps> = ({ children }) => {
           FallbackComponent={ErrorFallback}
           onReset={reset}
         >
-          <Suspense fallback={<SuspenseIndicator />}>{children}</Suspense>
+          {children}
         </ErrorBoundary>
       </Container>
       <Loading open={isLoading} />
