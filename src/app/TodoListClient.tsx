@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Typography,
   TextField,
@@ -16,11 +16,12 @@ import {
   Box,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useTodos, useAddTodo, useToggleTodo, useDeleteTodo } from "@/hooks/useTodos";
 import { useIsMounted } from "@/hooks/useIsMounted";
 
 export const TodoListClient: React.FC = () => {
+  const router = useRouter();
   const isMounted = useIsMounted();
   const { data: todos } = useTodos();
   const addTodo = useAddTodo();
@@ -92,17 +93,14 @@ export const TodoListClient: React.FC = () => {
                 boxShadow: 1,
               }}
               secondaryAction={
-                <Box display="flex" gap={0.5}>
-                  <Link href={`/todo?id=${todo.id}`} passHref legacyBehavior>
-                    <IconButton
-                      edge="end"
-                      aria-label="edit"
-                      component="a"
-                      sx={{ ml: 1 }}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                  </Link>
+                <>
+                  <IconButton
+                    edge="end"
+                    aria-label="details"
+                    onClick={() => router.push(`/todo?id=${todo.id}`)}
+                  >
+                    <ArrowForwardIosIcon fontSize="small" />
+                  </IconButton>
                   <IconButton
                     edge="end"
                     aria-label="delete"
@@ -112,7 +110,7 @@ export const TodoListClient: React.FC = () => {
                   >
                     <DeleteIcon />
                   </IconButton>
-                </Box>
+                </>
               }
             >
               <ListItemIcon sx={{ pl: 2 }}>

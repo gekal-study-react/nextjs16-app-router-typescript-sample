@@ -5,11 +5,12 @@ import { useState, useEffect } from "react";
 import {
   Box,
   Button,
-  TextField,
   Typography,
   CircularProgress,
-  Alert,
+  Paper,
+  Divider,
 } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useIsMounted } from "@/hooks/useIsMounted";
 import { todoApi, type Todo } from "@/api/todoApi";
 
@@ -21,8 +22,6 @@ export default function TodoPageClient() {
   const [todo, setTodo] = useState<Todo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [editTitle, setEditTitle] = useState("");
-  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     if (!isMounted || !todoId) {
@@ -36,14 +35,9 @@ export default function TodoPageClient() {
         setError(null);
         const data = await todoApi.fetchTodoById(todoId);
         setTodo(data);
-        setEditTitle(data.title);
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : "データの取得に失敗しました";
-        if (errorMsg.includes("見つかりません")) {
-          setError("notfound");
-        } else {
-          setError(errorMsg);
-        }
+        setError(errorMsg);
       } finally {
         setLoading(false);
       }
@@ -52,50 +46,20 @@ export default function TodoPageClient() {
     fetchTodo();
   }, [todoId, isMounted]);
 
-  const handleUpdate = async () => {
-    if (!todo || !editTitle.trim()) return;
-
-    try {
-      const updatedTodo = await todoApi.updateTodo(todoId!, {
-        ...todo,
-        title: editTitle,
-      });
-      setTodo(updatedTodo);
-      setIsEditing(false);
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "更新に失敗しました"
-      );
-    }
-  };
-
-  const handleDelete = async () => {
-    try {
-      await todoApi.deleteTodo(todoId!);
-      router.push("/");
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "削除に失敗しました"
-      );
-    }
-  };
-
   if (!isMounted) return null;
 
-  // No ID specified - show empty state
+  // No ID specified
   if (!todoId) {
     return (
-      <Box p={4} maxWidth="600px" mx="auto">
-        <Alert severity="info">
-          タスクを選択してください。リストから編集ボタンをクリックしてください。
-        </Alert>
+      <Box>
         <Button
-          variant="contained"
+          startIcon={<ArrowBackIcon />}
+          sx={{ mb: 2 }}
           onClick={() => router.push("/")}
-          sx={{ mt: 2 }}
         >
-          リストに戻る
+          一覧に戻る
         </Button>
+        <Typography>タスクが選択されていません。</Typography>
       </Box>
     );
   }
@@ -108,116 +72,75 @@ export default function TodoPageClient() {
     );
   }
 
-  if (error === "notfound") {
-    return (
-      <Box p={4} maxWidth="600px" mx="auto">
-        <Alert severity="warning" sx={{ mb: 2 }}>
-          このタスクは見つかりません。
-          <br />
-          タスクが削除されたか、IDが正しくない可能性があります。
-        </Alert>
-        <Button
-          variant="contained"
-          onClick={() => router.push("/")}
-        >
-          リストに戻る
-        </Button>
-      </Box>
-    );
-  }
-
   if (error) {
     return (
-      <Box p={4} maxWidth="600px" mx="auto">
-        <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>
+      <Box>
         <Button
-          variant="contained"
+          startIcon={<ArrowBackIcon />}
+          sx={{ mb: 2 }}
           onClick={() => router.push("/")}
         >
-          リストに戻る
+          一覧に戻る
         </Button>
+        <Typography color="error">{error}</Typography>
       </Box>
     );
   }
 
   if (!todo) {
     return (
-      <Box p={4} maxWidth="600px" mx="auto">
-        <Alert severity="warning" sx={{ mb: 2 }}>タスクが見つかりません</Alert>
+      <Box>
         <Button
-          variant="contained"
+          startIcon={<ArrowBackIcon />}
+          sx={{ mb: 2 }}
           onClick={() => router.push("/")}
         >
-          リストに戻る
+          一覧に戻る
         </Button>
+        <Typography>タスクが見つかりません。</Typography>
       </Box>
     );
   }
 
   return (
-    <Box maxWidth="600px" mx="auto" p={4}>
-      <Typography variant="h4" gutterBottom>
-        タスク詳細
-      </Typography>
-
-      <Box sx={{ mb: 3, p: 2, border: "1px solid #ddd", borderRadius: 1 }}>
-        {isEditing ? (
-          <>
-            <TextField
-              fullWidth
-              label="タスク名"
-              value={editTitle}
-              onChange={(e) => setEditTitle(e.target.value)}
-              sx={{ mb: 2 }}
-            />
-            <Box display="flex" gap={1}>
-              <Button variant="contained" onClick={handleUpdate}>
-                保存
-              </Button>
-              <Button
-                variant="outlined"
-                onClick={() => {
-                  setIsEditing(false);
-                  setEditTitle(todo.title);
-                }}
-              >
-                キャンセル
-              </Button>
-            </Box>
-          </>
-        ) : (
-          <>
-            <Typography variant="h6" sx={{ mb: 1 }}>
-              {todo.title}
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-              Status: {todo.completed ? "完了" : "未完了"}
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-              作成日時: {new Date(todo.createdAt).toLocaleString("ja-JP")}
-            </Typography>
-            <Box display="flex" gap={1}>
-              <Button variant="contained" onClick={() => setIsEditing(true)}>
-                編集
-              </Button>
-              <Button
-                variant="outlined"
-                color="error"
-                onClick={handleDelete}
-              >
-                削除
-              </Button>
-            </Box>
-          </>
-        )}
-      </Box>
-
-      <Button
-        variant="outlined"
-        onClick={() => router.push("/")}
-      >
-        リストに戻る
+    <Box>
+      <Button startIcon={<ArrowBackIcon />} sx={{ mb: 2 }} onClick={() => router.push("/")}>
+        一覧に戻る
       </Button>
+
+      <Paper sx={{ p: 3, borderRadius: 2 }}>
+        <Typography variant="h5" component="h1" gutterBottom sx={{ fontWeight: "bold" }}>
+          タスク詳細
+        </Typography>
+        <Divider sx={{ mb: 3 }} />
+
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="overline" color="text.secondary" sx={{ fontWeight: "bold" }}>
+            タイトル
+          </Typography>
+          <Typography variant="body1" sx={{ mt: 0.5 }}>
+            {todo.title}
+          </Typography>
+        </Box>
+
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="overline" color="text.secondary" sx={{ fontWeight: "bold" }}>
+            状態
+          </Typography>
+          <Typography variant="body1" sx={{ mt: 0.5 }}>
+            {todo.completed ? "完了" : "未完了"}
+          </Typography>
+        </Box>
+
+        <Box>
+          <Typography variant="overline" color="text.secondary" sx={{ fontWeight: "bold" }}>
+            作成日時
+          </Typography>
+          <Typography variant="body1" sx={{ mt: 0.5 }}>
+            {new Date(todo.createdAt).toLocaleString("ja-JP")}
+          </Typography>
+        </Box>
+      </Paper>
     </Box>
   );
 }
