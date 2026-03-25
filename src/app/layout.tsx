@@ -8,19 +8,13 @@ export const metadata: Metadata = {
   description: "Next.js 16 App Router + TanStack Query + MUI の TODO アプリケーション",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ja">
       <head />
       <body className="antialiased" suppressHydrationWarning>
         <CssBaseline />
-        <ClientLayout>
-          {children}
-        </ClientLayout>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );

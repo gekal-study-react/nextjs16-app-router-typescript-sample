@@ -2,14 +2,7 @@
 
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import {
-  Box,
-  Button,
-  Typography,
-  CircularProgress,
-  Paper,
-  Divider,
-} from "@mui/material";
+import { Box, Button, Typography, CircularProgress, Paper, Divider } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useIsMounted } from "@/hooks/useIsMounted";
 import { todoApi, type Todo } from "@/api/todoApi";
@@ -52,11 +45,7 @@ export default function TodoPageClient() {
   if (!todoId) {
     return (
       <Box>
-        <Button
-          startIcon={<ArrowBackIcon />}
-          sx={{ mb: 2 }}
-          onClick={() => router.push("/")}
-        >
+        <Button startIcon={<ArrowBackIcon />} sx={{ mb: 2 }} onClick={() => router.push("/")}>
           一覧に戻る
         </Button>
         <Typography>タスクが選択されていません。</Typography>
@@ -75,11 +64,7 @@ export default function TodoPageClient() {
   if (error) {
     return (
       <Box>
-        <Button
-          startIcon={<ArrowBackIcon />}
-          sx={{ mb: 2 }}
-          onClick={() => router.push("/")}
-        >
+        <Button startIcon={<ArrowBackIcon />} sx={{ mb: 2 }} onClick={() => router.push("/")}>
           一覧に戻る
         </Button>
         <Typography color="error">{error}</Typography>
@@ -90,11 +75,7 @@ export default function TodoPageClient() {
   if (!todo) {
     return (
       <Box>
-        <Button
-          startIcon={<ArrowBackIcon />}
-          sx={{ mb: 2 }}
-          onClick={() => router.push("/")}
-        >
+        <Button startIcon={<ArrowBackIcon />} sx={{ mb: 2 }} onClick={() => router.push("/")}>
           一覧に戻る
         </Button>
         <Typography>タスクが見つかりません。</Typography>

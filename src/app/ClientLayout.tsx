@@ -17,9 +17,7 @@ export function ClientLayout({ children }: ClientLayoutProps) {
     <QueryProvider>
       <GlobalLoadingProvider>
         <ThemeProvider theme={theme}>
-          <AppProvider>
-            {children}
-          </AppProvider>
+          <AppProvider>{children}</AppProvider>
         </ThemeProvider>
       </GlobalLoadingProvider>
     </QueryProvider>

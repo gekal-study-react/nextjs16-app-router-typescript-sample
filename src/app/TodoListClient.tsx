@@ -83,7 +83,7 @@ export const TodoListClient: React.FC = () => {
       ) : (
         <List>
           {todos.map((todo) => (
-             <ListItem
+            <ListItem
               key={todo.id}
               disablePadding
               sx={{

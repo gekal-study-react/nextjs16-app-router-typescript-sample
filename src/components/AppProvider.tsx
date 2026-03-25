@@ -42,10 +42,7 @@ export const AppProvider: React.FC<LayoutProps> = ({ children }) => {
         </Toolbar>
       </AppBar>
       <Container maxWidth="sm" sx={{ mt: 4 }}>
-        <ErrorBoundary
-          FallbackComponent={ErrorFallback}
-          onReset={reset}
-        >
+        <ErrorBoundary FallbackComponent={ErrorFallback} onReset={reset}>
           {children}
         </ErrorBoundary>
       </Container>
