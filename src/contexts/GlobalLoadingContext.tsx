@@ -1,3 +1,5 @@
+"use client";
+
 import React, { createContext, useContext, useState, useMemo } from "react";
 
 interface GlobalLoadingContextType {

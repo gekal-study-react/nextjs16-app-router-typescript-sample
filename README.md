@@ -1,11 +1,11 @@
-# Next.js 15 (Pages Router) TODO アプリ サンプル
+# Next.js 16 (App Router) TODO アプリ サンプル
 
-このプロジェクトは、Next.js 15 の Pages Router を使用し、TanStack Query と MUI を統合した CSR（クライアントサイドレンダリング）ベースの TODO アプリケーションのサンプルです。
+このプロジェクトは、Next.js 16 の App Router を使用し、TanStack Query と MUI を統合した CSR（クライアントサイドレンダリング）ベースの TODO アプリケーションのサンプルです。
 
 ## 主な特徴
 
-- **Next.js 15 (Pages Router)**: 最新バージョンの Next.js を使用。
-- **CSR & 静的サイト構成**: 全てのデータ処理をクライアントサイドで行い、静的サイトとして動作します。
+- **Next.js 16 (App Router)**: 最新バージョンの Next.js を App Router で実装。
+- **CSR & ハイブリッド構成**: クライアントコンポーネントを活用した柔軟なレンダリング方式。
 - **TanStack Query (v5)**: `useSuspenseQuery` を活用した効率的なデータ取得とキャッシュ管理。
 - **MUI (v7)**: 洗練された UI コンポーネントとレスポンシブデザイン。
 - **グローバルエラーハンドリング**: `react-error-boundary` と TanStack Query を連携させたエラー管理。
@@ -24,11 +24,24 @@ pnpm dev
 
 ## プロジェクト構成
 
-- `src/pages`: ページコンポーネント
+- `src/app`: App Router ベースのページレイアウト
+  - `layout.tsx`: ルートレイアウト
+  - `page.tsx`: トップページ（TODO リスト一覧）
+  - `todo/[id]/page.tsx`: TODO 詳細ページ
 - `src/components`: 共通 UI コンポーネント
 - `src/hooks`: TanStack Query を使用したカスタムフック
 - `src/api`: `localStorage` を使用した擬似 API レイヤー
+- `src/contexts`: グローバルな状態管理（GlobalLoadingContext）
 - `TODO_APP_DESIGN.md`: 詳細な設計仕様書
+
+## ビルド
+
+静的ビルドの場合：
+
+```bash
+pnpm build
+pnpm start
+```
 
 ## ライセンス
 

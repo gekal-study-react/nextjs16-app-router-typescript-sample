@@ -1,13 +1,20 @@
+"use client";
+
 import React from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { Typography, Button, Paper, Box, Divider } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useTodo } from "@/hooks/useTodos";
 
-const TodoDetail: React.FC = () => {
+interface TodoDetailPageProps {
+  params: {
+    id: string;
+  };
+}
+
+const TodoDetail: React.FC<{ id: string }> = ({ id }) => {
   const router = useRouter();
-  const { id } = router.query;
-  const { data: todo } = useTodo(id as string);
+  const { data: todo } = useTodo(id);
 
   return (
     <Box>
@@ -52,11 +59,6 @@ const TodoDetail: React.FC = () => {
   );
 };
 
-export default function TodoDetailPage() {
-  const router = useRouter();
-
-  // Wait for router to be ready to get the ID
-  if (!router.isReady || !router.query.id) return null;
-
-  return <TodoDetail />;
+export default function TodoDetailPage({ params }: TodoDetailPageProps) {
+  return <TodoDetail id={params.id} />;
 }

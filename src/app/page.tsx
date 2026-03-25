@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import {
   Typography,
@@ -14,7 +16,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useTodos, useAddTodo, useToggleTodo, useDeleteTodo } from "@/hooks/useTodos";
 
 const TodoList: React.FC = () => {
@@ -25,7 +27,7 @@ const TodoList: React.FC = () => {
   const deleteTodo = useDeleteTodo();
   const [newTodoTitle, setNewTodoTitle] = useState("");
 
-  const handleAddTodo = (e: React.SubmitEvent) => {
+  const handleAddTodo = (e: React.FormEvent) => {
     e.preventDefault();
     if (newTodoTitle.trim()) {
       addTodo.mutate(newTodoTitle);

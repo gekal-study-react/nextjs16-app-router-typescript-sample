@@ -1,6 +1,6 @@
-import "@/styles/globals.css";
-import type { AppProps } from "next/app";
-import { useEffect, useState } from "react";
+"use client";
+
+import React from "react";
 import { createTheme, ThemeProvider } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import { AppProvider } from "@/components/AppProvider";
@@ -9,24 +9,18 @@ import { GlobalLoadingProvider } from "@/contexts/GlobalLoadingContext";
 
 const theme = createTheme();
 
-export default function App({ Component, pageProps }: AppProps) {
-  const [mounted, setMounted] = useState(false);
+interface ClientLayoutProps {
+  children: React.ReactNode;
+}
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return null;
-  }
-
+export function ClientLayout({ children }: ClientLayoutProps) {
   return (
     <QueryProvider>
       <GlobalLoadingProvider>
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <AppProvider>
-            <Component {...pageProps} />
+            {children}
           </AppProvider>
         </ThemeProvider>
       </GlobalLoadingProvider>
