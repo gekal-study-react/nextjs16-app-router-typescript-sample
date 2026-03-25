@@ -93,7 +93,7 @@ export const TodoListClient: React.FC = () => {
               }}
               secondaryAction={
                 <Box display="flex" gap={0.5}>
-                  <Link href={`/todo/${todo.id}`} passHref legacyBehavior>
+                  <Link href={`/todo?id=${todo.id}`} passHref legacyBehavior>
                     <IconButton
                       edge="end"
                       aria-label="edit"

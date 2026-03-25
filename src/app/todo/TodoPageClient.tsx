@@ -1,7 +1,7 @@
 "use client";
 
+import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import {
   Box,
   Button,
@@ -13,13 +13,11 @@ import {
 import { useIsMounted } from "@/hooks/useIsMounted";
 import { todoApi, type Todo } from "@/api/todoApi";
 
-interface TodoDetailClientProps {
-  id: string;
-}
-
-export default function TodoDetailClient({ id }: TodoDetailClientProps) {
+export default function TodoPageClient() {
+  const searchParams = useSearchParams();
   const router = useRouter();
   const isMounted = useIsMounted();
+  const todoId = searchParams.get("id");
   const [todo, setTodo] = useState<Todo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -27,18 +25,20 @@ export default function TodoDetailClient({ id }: TodoDetailClientProps) {
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    if (!isMounted) return;
+    if (!isMounted || !todoId) {
+      setLoading(false);
+      return;
+    }
 
     const fetchTodo = async () => {
       try {
         setLoading(true);
         setError(null);
-        const data = await todoApi.fetchTodoById(id);
+        const data = await todoApi.fetchTodoById(todoId);
         setTodo(data);
         setEditTitle(data.title);
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : "データの取得に失敗しました";
-        // Check if it's a "not found" error
         if (errorMsg.includes("見つかりません")) {
           setError("notfound");
         } else {
@@ -50,13 +50,13 @@ export default function TodoDetailClient({ id }: TodoDetailClientProps) {
     };
 
     fetchTodo();
-  }, [id, isMounted]);
+  }, [todoId, isMounted]);
 
   const handleUpdate = async () => {
     if (!todo || !editTitle.trim()) return;
 
     try {
-      const updatedTodo = await todoApi.updateTodo(id, {
+      const updatedTodo = await todoApi.updateTodo(todoId!, {
         ...todo,
         title: editTitle,
       });
@@ -71,7 +71,7 @@ export default function TodoDetailClient({ id }: TodoDetailClientProps) {
 
   const handleDelete = async () => {
     try {
-      await todoApi.deleteTodo(id);
+      await todoApi.deleteTodo(todoId!);
       router.push("/");
     } catch (err) {
       setError(
@@ -81,6 +81,24 @@ export default function TodoDetailClient({ id }: TodoDetailClientProps) {
   };
 
   if (!isMounted) return null;
+
+  // No ID specified - show empty state
+  if (!todoId) {
+    return (
+      <Box p={4} maxWidth="600px" mx="auto">
+        <Alert severity="info">
+          タスクを選択してください。リストから編集ボタンをクリックしてください。
+        </Alert>
+        <Button
+          variant="contained"
+          onClick={() => router.push("/")}
+          sx={{ mt: 2 }}
+        >
+          リストに戻る
+        </Button>
+      </Box>
+    );
+  }
 
   if (loading) {
     return (
